@@ -4,8 +4,6 @@ CREATE TABLE IF NOT EXISTS titles (
 	PRIMARY KEY (TitleID)
 );
 
-SELECT *
-FROM titles;
 
 
 CREATE TABLE IF NOT EXISTS employees (
@@ -20,18 +18,15 @@ CREATE TABLE IF NOT EXISTS employees (
 	FOREIGN KEY (TitleID) REFERENCES titles(TitleID)
 );
 
-SELECT *
-FROM employees;
 
 
 CREATE TABLE IF NOT EXISTS salaries (
-	EmployeeID INT,
+	EmployeeID INT NOT NULL,
 	Salary MONEY NOT NULL,
-	FOREIGN KEY (EmployeeID) REFERENCES employees(EmployeeID)
+	FOREIGN KEY (EmployeeID) REFERENCES employees(EmployeeID),
+	PRIMARY KEY (EmployeeID)
 );
 
-SELECT *
-FROM salaries;
 
 
 CREATE TABLE IF NOT EXISTS dep_type (
@@ -40,32 +35,20 @@ CREATE TABLE IF NOT EXISTS dep_type (
 	PRIMARY KEY (DepartmentID)
 );
 
-SELECT *
-FROM dep_type;
 
-
-CREATE TABLE IF NOT EXISTS departments (
+CREATE TABLE IF NOT EXISTS dep_emp (
 	EmployeeID INT,
 	DepartmentID VARCHAR NOT NULL,
 	FOREIGN KEY (EmployeeID) REFERENCES employees(EmployeeID),
-	FOREIGN KEY (DepartmentID) REFERENCES dep_type(DepartmentID)
+	FOREIGN KEY (DepartmentID) REFERENCES dep_type(DepartmentID),
+	PRIMARY KEY (EmployeeID, DepartmentID)
 );
 
-SELECT *
-FROM departments;
 
-
-
-
-SELECT emp.EmployeeID, tt.Title, emp.BirthDate, emp.FirstName, emp.LastName, 
-	emp.Sex, emp.HireDate, salaries.Salary, dep.DepartmentID,
-	dep_type.DepartmentName
-FROM employees AS emp
-JOIN titles AS tt
-	ON emp.TitleID = tt.TitleID
-JOIN salaries
-	ON emp.EmployeeID = salaries.EmployeeID
-JOIN departments AS dep
-	ON emp.EmployeeID = dep.EmployeeID
-JOIN dep_type
-	ON dep.DepartmentID = dep_type.DepartmentID;
+CREATE TABLE IF NOT EXISTS dep_man (
+	DepartmentID VARCHAR NOT NULL,
+	EmployeeID INT NOT NULL,
+	FOREIGN KEY (EmployeeID) REFERENCES employees(EmployeeID),
+	FOREIGN KEY (DepartmentID) REFERENCES dep_type(DepartmentID),
+	PRIMARY KEY (EmployeeID, DepartmentID)
+);
